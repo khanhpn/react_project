@@ -1,27 +1,61 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, NavLink, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, NavLink, Switch, Link } from 'react-router-dom';
 import Home from './components/Home';
 import About from './components/About';
 import Contact from './components/Contact';
 import NotFound from './components/NotFound';
 
+const menus = [
+  {
+    name: "Home",
+    to: "/",
+    exact: true
+  },
+  {
+    name: "About",
+    to: "/about",
+    exact: false
+  },
+  {
+    name: "Contact",
+    to: "/contact",
+    exact: false
+  }
+];
+
+const MenuLink = ({label, to, activeOnlyWhenExac}) => {
+  return (
+    <Route path={to} exact={activeOnlyWhenExac} children={({match}) => {
+      var active = match ? "active" : "";
+      return (
+        <li className={active}>
+          <Link to={to}>{label}</Link>
+        </li>
+      );
+    }} />
+  );
+}
 
 class App extends Component {
+  showMenu(menus) {
+    var result = null;
+    if (menus.length > 0) {
+      result = menus.map((menu, index) => {
+        return (
+          <MenuLink label={menu.name} key={index} to={menu.to} activeOnlyWhenExac={menu.exact} />
+        );
+      });
+    }
+    return result;
+  }
+
   render() {
     return (
       <Router>
         <div className="App">
-          <nav className="navbar navbar-inverse">
+          <nav className="navbar navbar-default">
             <ul className="nav navbar-nav">
-              <li className="active">
-                <NavLink activeClassName="active" exact to="/">Home</NavLink>
-              </li>
-              <li>
-                <NavLink activeClassName="active" to="/about">About</NavLink>
-              </li>
-              <li>
-                <NavLink activeClassName="active" to="/contact">Contact</NavLink>
-              </li>
+              {this.showMenu(menus)}
             </ul>
           </nav>
           <Switch>
