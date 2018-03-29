@@ -20,16 +20,29 @@ class App extends Component {
     })
   }
 
+  onChangeFontSize = (params) => {
+    this.setState({
+      fontSize: this.state.fontSize + params
+    });
+  }
+
+  onReset = () => {
+    this.setState({
+      color: "red",
+      fontSize: 15
+    })
+  }
+
   render() {
     return (
       <div className="container">
         <div className="row">
           <ColorPicker color={this.state.color} onReceiveColor={this.onSetColor}/>
           <div className="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-            <SizeSetting />
-            <Reset />
+            <SizeSetting font={this.state.fontSize} changeFontSize={this.onChangeFontSize}/>
+            <Reset onReset={this.onReset} />
           </div>
-          <Result color={this.state.color}/>
+          <Result color={this.state.color} font={this.state.fontSize}/>
         </div>
       </div>
     )
