@@ -25,7 +25,8 @@ class App extends Component {
           name: "learn java",
           status: false
         }
-      ]
+      ],
+      isDisplayForm: false
     };
   }
 
@@ -45,20 +46,26 @@ class App extends Component {
     console.log("component did mount");
   }
 
-
+  onToggleForm = (value) => {
+    this.setState({
+      isDisplayForm: !value
+    })
+  }
 
   render() {
     localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
-    var { tasks } = this.state;
+    var { tasks, isDisplayForm } = this.state;
+
+    var elmTaskForm = isDisplayForm ? <TaskForm /> : '';
     return (
       <div className="container">
         <Title />
         <div className="row">
-          <div className="col-xs-4 col-sm-4 col-md-4 col-lg-4">
-            <TaskForm />
+          <div className={isDisplayForm ? "col-xs-4 col-sm-4 col-md-4 col-lg-4" : "col-xs-0 col-sm-0 col-md-0 col-lg-0"}>
+            {elmTaskForm}
           </div>
-          <div className="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-            <button type="button" className="btn btn-primary"><span className="fa fa-plus mr-5"></span>Thêm Công Việc</button>
+          <div className={isDisplayForm ? "col-xs-8 col-sm-8 col-md-8 col-lg-8" : "col-xs-12 col-sm-12 col-md-12 col-lg-12"}>
+            <button type="button" className="btn btn-primary" onClick={() => this.onToggleForm(isDisplayForm)}><span className="fa fa-plus mr-5"></span>Thêm Công Việc</button>
             <Control />
             <TaskList tasks={tasks} />
           </div>
