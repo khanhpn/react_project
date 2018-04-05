@@ -47,7 +47,11 @@ class App extends Component {
         }
       ],
       isDisplayForm: false,
-      taskEditing: ''
+      taskEditing: '',
+      filter: {
+        name: '',
+        status: 0
+      }
     };
   }
 
@@ -61,16 +65,27 @@ class App extends Component {
 
   onToggleForm = (value) => {
     this.setState({
-      isDisplayForm: !value
+      isDisplayForm: !value,
+      taskEditing: ''
     })
   }
 
   onHandleSubmit = (value) => {
-    console.log(value);
-    let newJob = [{id: this.s4(), name: value.txtName, status: value.txtStatus}];
-    this.setState({
-      tasks: [...this.state.tasks, ...newJob]
-    });
+    if (value.id) {
+      let target = this.state.tasks.find(item => item.id === value.id);
+      let indexTask = this.state.tasks.indexOf(target);
+      this.state.tasks[indexTask].status = value.txtStatus === "true" ? true : false
+      this.state.tasks[indexTask].name = value.txtName
+      this.setState({
+        tasks: this.state.tasks
+      });
+    } else {
+      let newJob = [{ id: this.s4(), name: value.txtName, status: value.txtStatus }];
+      this.setState({
+        tasks: [...this.state.tasks, ...newJob],
+        taskEditing: ''
+      });
+    }
   }
 
   onChangeStatus = (id) => {
@@ -87,7 +102,7 @@ class App extends Component {
     let indexTask = this.state.tasks.indexOf(target);
     this.state.tasks.splice(indexTask, 1);
     this.setState({
-      tasks: this.state.tasks
+      tasks: this.state.tasksappli
     });
   }
 
@@ -100,10 +115,25 @@ class App extends Component {
     })
   }
 
+  onHandleFilterTask = (value) => {
+    this.setState({
+      filter: {
+        name: value.filterName,
+        status: value.filterStatus
+      }
+    });
+  }
+
   render() {
     localStorage.setItem("tasks", JSON.stringify(this.state.tasks));
-    var { tasks, isDisplayForm, taskEditing } = this.state;
-
+    var { tasks, isDisplayForm, taskEditing, filter } = this.state;
+    if (filter) {
+      if (filter.name) {
+        tasks.filter((task) => {
+          // return task.nae
+        });
+      }
+    }
     var elmTaskForm = isDisplayForm ? <TaskForm
       onToggleForm={this.onToggleForm} onHandleSubmit={this.onHandleSubmit}
       task={taskEditing} /> : '';
@@ -119,7 +149,8 @@ class App extends Component {
             <Control />
             <TaskList tasks={tasks} onChangeStatus={this.onChangeStatus}
               onHandleRemoveJob={this.onHandleRemoveJob}
-              onHandleEditJob={this.onHandleEditJob} />
+              onHandleEditJob={this.onHandleEditJob}
+              onHandleFilterTask={this.onHandleFilterTask} />
           </div>
         </div>
       </div>

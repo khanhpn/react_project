@@ -37,6 +37,16 @@ export default class TaskForm extends Component {
     }
   }
 
+  componentWillReceiveProps(nextProps) {
+    let { task } = nextProps;
+    if (task) {
+      this.setState({
+        id: task.id,
+        txtName: task.name,
+        txtStatus: task.status
+      });
+    }
+  }
 
   onHandleCloseForm = (value) => {
     this.props.onToggleForm(true);
@@ -54,9 +64,17 @@ export default class TaskForm extends Component {
 
   titleTaskForm() {
     if (this.state.id) {
-      return "Sửa Công Việc"
+      return "Sửa Công Việc";
     } else {
-      return "Thêm Công Việc"
+      return "Thêm Công Việc";
+    }
+  }
+
+  titleTaskSubmit() {
+    if (this.state.id) {
+      return "Cập nhật";
+    } else {
+      return "Thêm";
     }
   }
 
@@ -65,7 +83,7 @@ export default class TaskForm extends Component {
       <div className="panel panel-warning">
         <div className="panel-heading">
           <h3 className="panel-title">
-            <span className="fa fa-plus mr-5" onClick={this.onHandleCloseForm}></span>&nbsp;{this.titleTaskForm}</h3>
+            <span className="fa fa-plus mr-5" onClick={this.onHandleCloseForm}></span>&nbsp;{this.titleTaskForm()}</h3>
         </div>
         <div className="panel-body">
           <form>
@@ -80,7 +98,7 @@ export default class TaskForm extends Component {
             </select>
             <br />
             <div className="text-center">
-              <button type="submit" className="btn btn-warning" onClick={this.onHandleSubmit}>Thêm</button>&nbsp;
+              <button type="submit" className="btn btn-warning" onClick={this.onHandleSubmit}>{this.titleTaskSubmit()}</button>&nbsp;
               <button type="submit" className="btn btn-danger" onClick={this.onHandleReset}>Hủy Bỏ</button>
             </div>
           </form>

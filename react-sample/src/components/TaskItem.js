@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
 
 export default class TaskItem extends Component {
-  onHandleEdit = (event) => {
-    console.log("object");
-  }
-
   onHandleRemove = (id) => {
     this.props.onHandleRemoveJob(id);
   }
